@@ -133,12 +133,12 @@ public class Player {
 		}
 		
 		if(pointsDoubled == 1) {
-			return "½";
+			return "\u00BD";
 		}
 		else {
 			String points = String.valueOf(pointsDoubled / 2);
 			if(pointsDoubled % 2 != 0) {
-				points += "½";
+				points += "\u00BD";
 			}
 			return points;
 		}

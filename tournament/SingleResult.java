@@ -23,7 +23,7 @@ public enum SingleResult {
 	
 	NONE (0, "?", "?"),
 	LOSS (0, "0", "-"),
-	DRAW (1, "½", "="),
+	DRAW (1, "\u00BD", "="),
 	WIN  (2, "1", "+");
 	
 	private final int pointsDoubled;
