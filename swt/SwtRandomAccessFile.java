@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class SwtRandomAccessFile extends RandomAccessFile {
+	private final String CHARSET = "Windows-1252";
 
 	public SwtRandomAccessFile(File file, String mode) throws IOException {
 		super(file, mode);
@@ -49,10 +50,10 @@ public class SwtRandomAccessFile extends RandomAccessFile {
 		}
 		for(int byteIndex = 0; byteIndex < numBytesRead; byteIndex++) {
 			if(byteArray[byteIndex] == 0) {
-				return new String(byteArray, 0, byteIndex);
+				return new String(byteArray, 0, byteIndex, CHARSET);
 			}
 		}
-		return new String(byteArray, 0, numBytesRead);
+		return new String(byteArray, 0, numBytesRead, CHARSET);
 	}
 	
 	public void writeNullTerminatedString(String str) throws IOException {
