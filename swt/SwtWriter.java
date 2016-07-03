@@ -89,6 +89,14 @@ public class SwtWriter {
 			// refresh the player active flag
 			writePlayerActiveFlags(swtRaFile, tournament.getRounds().size(), tournament.getPlayers(), beforeFirstRound);
 			
+			// if we just added the first round, we have to overwrite the section where the player information were, as this section is now used for storing ranking changes
+			if(beforeFirstRoundChanged) {
+				swtRaFile.seek(Constants.playerOffsetBeforeFirstRound);
+				for(long byteIndex = Constants.playerOffsetBeforeFirstRound; byteIndex < Constants.roundOffset; byteIndex++) {
+					swtRaFile.writeByte(0x00);
+				}
+			}
+			
 		}
 		catch(IOException | IllegalStateException e) {
 			// simply pass the exception to the caller
