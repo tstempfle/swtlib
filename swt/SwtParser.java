@@ -95,16 +95,16 @@ public class SwtParser {
 		
 	}
 	
-	private static int parseNumPlayers(SwtRandomAccessFile swtRaFile) throws IOException {
+	static int parseNumRounds(SwtRandomAccessFile swtRaFile) throws IOException {
 		
-		swtRaFile.seek(Constants.numPlayersOffset);
+		swtRaFile.seek(Constants.numRoundsOffset);
 		return swtRaFile.readLittleEndianUnsignedShort();
 		
 	}
 	
-	private static int parseNumRounds(SwtRandomAccessFile swtRaFile) throws IOException {
+	private static int parseNumPlayers(SwtRandomAccessFile swtRaFile) throws IOException {
 		
-		swtRaFile.seek(Constants.numRoundsOffset);
+		swtRaFile.seek(Constants.numPlayersOffset);
 		return swtRaFile.readLittleEndianUnsignedShort();
 		
 	}

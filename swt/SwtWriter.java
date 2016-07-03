@@ -44,6 +44,9 @@ public class SwtWriter {
 			// open the SWT file
 			swtRaFile = new SwtRandomAccessFile(swtFile, "rw");
 			
+			// get the old number of rounds
+			int oldNumRounds = SwtParser.parseNumRounds(swtRaFile);
+			
 			// check the old number of paired rounds
 			boolean oldBeforeFirstRound = SwtParser.parseNumPairedRounds(swtRaFile) == 0;
 			
@@ -55,7 +58,7 @@ public class SwtWriter {
 			}
 			
 			// write the number of paired rounds
-			int numPairedRounds = writeNumPairedRounds(swtRaFile, tournament.getRounds());
+			int numPairedRounds = writeNumRounds(swtRaFile, tournament.getRounds());
 			boolean beforeFirstRound = (numPairedRounds == 0);
 			
 			// write flag indicating if the first round was already paired
@@ -69,7 +72,7 @@ public class SwtWriter {
 			// save the whole player section if there are new players or if the first round was just paired, as it will be overwritten
 			byte[] playerSection = null;
 			if(newPlayers || beforeFirstRoundChanged) {
-				long playerSectionOffset = Constants.getPlayerSectionOffset(oldNumPlayers, tournament.getRounds().size(), oldBeforeFirstRound);
+				long playerSectionOffset = Constants.getPlayerSectionOffset(oldNumPlayers, oldNumRounds, oldBeforeFirstRound);
 				int playerSectionLength = (int)(swtRaFile.length() - playerSectionOffset);
 				playerSection = new byte[playerSectionLength];
 				swtRaFile.seek(playerSectionOffset);
@@ -128,7 +131,7 @@ public class SwtWriter {
 		
 	}
 	
-	private static int writeNumPairedRounds(SwtRandomAccessFile swtRaFile, ArrayList<Round> rounds) throws IOException {
+	private static int writeNumRounds(SwtRandomAccessFile swtRaFile, ArrayList<Round> rounds) throws IOException {
 		
 		// determine the number of paired rounds
 		int numPairedRounds = 0;
@@ -138,6 +141,10 @@ public class SwtWriter {
 			}
 			numPairedRounds++;
 		}
+		
+		// write the total number of rounds
+		swtRaFile.seek(Constants.numRoundsOffset);
+		swtRaFile.writeLittleEndianUnsignedShort(rounds.size());
 		
 		// write the number of paired rounds both to the number of paired round and the current round field
 		swtRaFile.seek(Constants.currentRoundOffset);
