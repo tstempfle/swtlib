@@ -152,7 +152,7 @@ public class SwtParser {
 			boolean bye = toPlayerBye(swtRaFile.readByte());
 			
 			// construct a new player and fill it into the player list array
-			Player player = new Player(playerIndex + 1, name, title, elo, nationalRating, club, bye, active, numRounds);
+			Player player = new Player(name, title, elo, nationalRating, club, bye, active);
 			players.add(player);
 
 		}
@@ -167,15 +167,6 @@ public class SwtParser {
 		ArrayList<TreeMap<Integer, Pairing>> tempRounds = new ArrayList<TreeMap<Integer, Pairing>>();
 		for(int roundIndex = 0; roundIndex < numRounds; roundIndex++) {
 			tempRounds.add(new TreeMap<Integer, Pairing>());
-		}
-		
-		// fill the pairings list of each player with nulls
-		for(Player player : players) {
-			ArrayList<Pairing> pairings = new ArrayList<Pairing>(numRounds);
-			for(int roundIndex = 0; roundIndex < numRounds; roundIndex++) {
-				pairings.add(null);
-				player.setPairings(pairings);
-			}
 		}
 		
 		// go to the first pairing
@@ -260,14 +251,6 @@ public class SwtParser {
 						}
 						
 						tempRounds.get(roundIndex).get(pairingIndex).setResult(result);
-						
-						// the pairing is complete, so add it to the players' pairing collections.
-						ArrayList<Pairing> playerPairings = player.getPairings();
-						playerPairings.set(roundIndex, pairing);
-						player.setPairings(playerPairings);
-						ArrayList<Pairing> opponentPairings = opponent.getPairings();
-						opponentPairings.set(roundIndex, pairing);
-						opponent.setPairings(opponentPairings);
 						
 					}
 					

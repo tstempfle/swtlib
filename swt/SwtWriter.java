@@ -81,7 +81,7 @@ public class SwtWriter {
 			
 			// write the pairings for each player
 			if(!beforeFirstRound) {
-				writeRounds(swtRaFile, tournament.getPlayers());
+				writeRounds(swtRaFile, tournament);
 			}
 			
 			// rewrite the player section if necessary
@@ -178,7 +178,7 @@ public class SwtWriter {
 		
 	}
 	
-	private static void writeRounds(SwtRandomAccessFile swtRaFile, ArrayList<Player> players) throws IOException {
+	private static void writeRounds(SwtRandomAccessFile swtRaFile, Tournament tournament) throws IOException {
 		
 		// go to the first pairing
 		swtRaFile.seek(Constants.roundOffset);
@@ -186,10 +186,10 @@ public class SwtWriter {
 		boolean firstPairing = true;
 		
 		// iterate over all players
-		for(Player player : players) {
+		for(Player player : tournament.getPlayers()) {
 			
 			// iterate over all pairings
-			for(Pairing pairing : player.getPairings()) {
+			for(Pairing pairing : tournament.getPlayerPairings(player)) {
 				
 				if(!firstPairing) {
 					// fill the space between the last and this pairing with zeros
@@ -221,7 +221,7 @@ public class SwtWriter {
 				
 				// write the pairing data
 				swtRaFile.writeByte(createPairingFlags(pairing.getWhitePlayer() == player, pairing.getResult().isByDefault()));
-				swtRaFile.writeLittleEndianUnsignedShort(opponent.getStartRank());
+				swtRaFile.writeLittleEndianUnsignedShort(tournament.getPlayers().indexOf(opponent) + 1);
 				swtRaFile.writeByte(singleResultToByte(white ? pairing.getResult().getWhiteResult() : pairing.getResult().getBlackResult()));
 				swtRaFile.writeByte(0x00);
 				swtRaFile.writeLittleEndianUnsignedShort(pairing.getPairingNumber());

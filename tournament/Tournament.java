@@ -52,23 +52,63 @@ public class Tournament {
 		this.rounds = rounds;
 	}
 	
-	public void removePairings(int roundIndex) {
-		Round round = rounds.get(roundIndex);
-		for(Pairing pairing : round.getPairings()) {
-			pairing.getWhitePlayer().setPairing(roundIndex, null);
-			pairing.getBlackPlayer().setPairing(roundIndex, null);
+	public ArrayList<Pairing> getPlayerPairings(Player player) {
+		
+		ArrayList<Pairing> pairings = new ArrayList<Pairing>(rounds.size());
+		
+		for(Round round : rounds) {
+			boolean pairingFound = false;
+			for(Pairing pairing : round.getPairings()) {
+				if(player == pairing.getWhitePlayer() || player == pairing.getBlackPlayer()) {
+					pairings.add(pairing);
+					pairingFound = true;
+					break;
+				}
+			}
+			if(!pairingFound) {
+				pairings.add(null);
+			}
 		}
-		round.removePairings();
+		
+		return pairings;
+		
 	}
 	
-	public void updatePairings(int roundIndex, ArrayList<Pairing> pairings) {
+	public int getPlayerPointsDoubled(Player player, int beforeRound) {
 		
-		rounds.get(roundIndex).setPairings(pairings);
+		int pointsDoubled = 0;
 		
-		for(Pairing pairing : pairings) {
-			pairing.getWhitePlayer().setPairing(roundIndex, pairing);
-			pairing.getBlackPlayer().setPairing(roundIndex, pairing);
+		ArrayList<Pairing> playerPairings = getPlayerPairings(player);
+		
+		for(int roundIndex = 0; roundIndex < beforeRound; roundIndex++) {
+			Pairing pairing = playerPairings.get(roundIndex);
+			if(player == pairing.getWhitePlayer()) {
+				pointsDoubled += pairing.getResult().getWhiteResult().getPointsDoubled();
+			}
+			else if(player == pairing.getBlackPlayer()) {
+				pointsDoubled += pairing.getResult().getBlackResult().getPointsDoubled();
+			}
 		}
+		
+		return pointsDoubled;
+		
+	}
+	
+	public String getPlayerPoints(Player player, int beforeRound) {
+		
+		int pointsDoubled = getPlayerPointsDoubled(player, beforeRound);
+		
+		if(pointsDoubled == 1) {
+			return "\u00BD";
+		}
+		else {
+			String points = String.valueOf(pointsDoubled / 2);
+			if(pointsDoubled % 2 != 0) {
+				points += "\u00BD";
+			}
+			return points;
+		}
+		
 	}
 	
 }

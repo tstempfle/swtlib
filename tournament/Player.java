@@ -19,11 +19,8 @@
 
 package swtlib.tournament;
 
-import java.util.ArrayList;
-
 public class Player {
 
-	private int startRank;
 	private String name;
 	private String title;
 	private int elo;
@@ -32,10 +29,7 @@ public class Player {
 	private boolean bye;
 	private boolean active;
 	
-	private ArrayList<Pairing> pairings;
-	
-	public Player(int startRank, String name, String title, String elo, String nationalRating, String club, boolean bye, boolean active, int numRounds) {
-		this.startRank = startRank;
+	public Player(String name, String title, String elo, String nationalRating, String club, boolean bye, boolean active) {
 		this.name = name;
 		this.title = title;
 		try {
@@ -53,18 +47,6 @@ public class Player {
 		this.club = club;
 		this.bye = bye;
 		this.active = active;
-		pairings = new ArrayList<Pairing>(numRounds);
-		for(int roundIndex = 0; roundIndex < numRounds; roundIndex++) {
-			pairings.add(null);
-		}
-	}
-	
-	public int getStartRank() {
-		return startRank;
-	}
-	
-	public void setStartRank(int startRank) {
-		this.startRank = startRank;
 	}
 	
 	public String getName() {
@@ -101,48 +83,6 @@ public class Player {
 	
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-	
-	public ArrayList<Pairing> getPairings() {
-		return new ArrayList<Pairing>(pairings);
-	}
-	
-	public void setPairings(ArrayList<Pairing> pairings) {
-		this.pairings = pairings;
-	}
-	
-	public void setPairing(int roundIndex, Pairing pairing) {
-		pairings.set(roundIndex, pairing);
-	}
-	
-	public String getPoints(int beforeRound) {
-		
-		int pointsDoubled = 0;
-		
-		for(int roundIndex = 0; roundIndex < beforeRound; roundIndex++) {
-			Pairing pairing = pairings.get(roundIndex);
-			if(pairing == null) {
-				continue;
-			}
-			if(this == pairing.getWhitePlayer()) {
-				pointsDoubled += pairing.getResult().getWhiteResult().getPointsDoubled();
-			}
-			else if(this == pairing.getBlackPlayer()) {
-				pointsDoubled += pairing.getResult().getBlackResult().getPointsDoubled();
-			}
-		}
-		
-		if(pointsDoubled == 1) {
-			return "\u00BD";
-		}
-		else {
-			String points = String.valueOf(pointsDoubled / 2);
-			if(pointsDoubled % 2 != 0) {
-				points += "\u00BD";
-			}
-			return points;
-		}
-		
 	}
 	
 }
