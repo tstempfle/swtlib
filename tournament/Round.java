@@ -34,7 +34,7 @@ public class Round {
 	}
 	
 	public ArrayList<Pairing> getPairings() {
-		return new ArrayList<Pairing>(pairings);
+		return pairings;
 	}
 	
 	public void setPairings(ArrayList<Pairing> pairings) {
